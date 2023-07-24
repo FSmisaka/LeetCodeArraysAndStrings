@@ -1,0 +1,46 @@
+题目：
+以数组 intervals 表示若干个区间的集合，其中单个区间为 intervals[i] = [starti, endi]**。
+请你合并所有重叠的区间，并返回一个不重叠的区间数组，该数组需恰好覆盖输入中的所有区间。  
+
+样例01：
+输入：intervals = [[1,3],[2,6],[8,10],[15,18]]
+输出：[[1,6],[8,10],[15,18]]
+
+样例02：
+输入：intervals = [[1,4],[4,5]]
+输出：[[1,5]]
+
+心路历程：
+% 一次尝试
+  定义一维数组，初始化全部为0。遍历intervals中的区间，将区间内索引的数组改为1。再遍历一次，标记左0右1和左1右0的坐标，填入数组作为返回值。
+  错误：并不能解决“重叠”的问题。如[[1,3],[4,5]]，会返回[[1!5!]]。
+% 二次尝试
+  后来发现没有想象中复杂。采用一点点栈的思想，对排序后的intervals，不断比较stack[-1]和intervals[i][0]并根据结果选择更新stack或“导出”
+  stack即可。
+
+·AC代码
+class Solution:
+    def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+        # 排序
+        intervals = sorted(intervals, key = lambda x: x[0])
+        ans = []
+        stack = []
+        # 遍历intervals，不断改变栈的状态
+        for i in range(len(intervals)):
+            if i == 0:
+                stack.append(intervals[i][0])
+                stack.append(intervals[i][1])
+                continue
+            if stack[-1] >= intervals[i][0]:
+                temp = stack[-1]
+                stack.pop(-1)
+                stack.append(max(temp,intervals[i][1]))
+            else:
+                # 这个是叫deepcopy？总之需要备份一个数组，否则会一直变化
+                ans.append(stack[:])
+                stack.pop(-1)
+                stack.pop(-1)
+                stack.append(intervals[i][0])
+                stack.append(intervals[i][1])
+        ans.append(stack[:])
+        return ans
