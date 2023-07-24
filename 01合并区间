@@ -18,6 +18,7 @@
   后来发现没有想象中复杂。采用一点点栈的思想，对排序后的intervals，不断比较stack[-1]和intervals[i][0]并根据结果选择更新stack或“导出”
   stack即可。
 
+# 后来看题解发现不需要多定义一个stack，这样就不需要一个劲地去pop了，应该会快很多
 ·AC代码
 class Solution:
     def merge(self, intervals: List[List[int]]) -> List[List[int]]:
