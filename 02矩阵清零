@@ -1,0 +1,71 @@
+题目：若 M × N 矩阵中某个元素为0，则将其所在的行与列清零
+
+样例01：
+输入：
+  [1,1,1],
+  [1,0,1],
+  [1,1,1]
+输出：
+  [1,0,1],
+  [0,0,0],
+  [1,0,1]
+
+心路历程：
+% 模拟
+  遍历二维数组，将0处的索引记录在新的数组里。再遍历该新数组，对着存储的位置信息去修改原本的矩阵
+  时间复杂度 O(MN)
+  空间复杂度 O(MN)
+·AC代码
+class Solution:
+    def setZeroes(self, matrix: List[List[int]]) -> None:
+        lis = []
+        M = len(matrix)
+        N = len(matrix[0])
+        for i in range(M):
+            for j in range(N):
+                if matrix[i][j] == 0:
+                    lis.append((i,j))
+        for k in range(len(lis)):
+            for col in range(N):
+                matrix[lis[k][0]][col] = 0
+            for row in range(M):
+                matrix[row][lis[k][1]] = 0
+
+% O(1)空间复杂度
+  事实上，完全可以不定义上述lis数组，直接将0处的索引记录在原数组matrix上即可，这样可以达到O(1)的空间复杂度
+·AC代码
+class Solution:
+    def setZeroes(self, matrix: List[List[int]]) -> None:
+        M, N = len(matrix), len(matrix[0])
+        flagCol, flagRow = False, False
+        # 单独考察第0行第0列，一旦有0就做标记并break
+        for i in range(M):
+            if matrix[i][0] == 0:
+                flagCol = True
+                break
+        for j in range(N):
+            if matrix[0][j] == 0:
+                flagRow = True
+                break
+        # 找到所有0的索引，将对应的第0行第0列位置元素变为0
+        for i in range(M):
+            for j in range(N):
+                if matrix[i][j] == 0:
+                    matrix[i][0] = 0
+                    matrix[0][j] = 0
+        # 将第0行和第0列为0的对应行与列（索引从1开始（不能干扰后面的判断））全部变为0
+        for i in range(1,M):
+            if matrix[i][0] == 0:
+                for j in range(N):
+                    matrix[i][j] = 0
+        for j in range(1,N):
+            if matrix[0][j] == 0:
+                for i in range(M):
+                    matrix[i][j] = 0
+        # 单独处理索引为0的情况（刚才只更新了索引从1开始的位置的值）
+        if flagCol:
+            for i in range(M):
+                matrix[i][0] = 0
+        if flagRow:
+            for j in range(N):
+                matrix[0][j] = 0
