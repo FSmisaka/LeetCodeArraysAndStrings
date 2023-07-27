@@ -1,0 +1,23 @@
+题目：给你一个数组 nums 和一个值 val，你需要 原地 移除所有数值等于 val 的元素，并返回移除后数组的新长度。
+     不要使用额外的数组空间，你必须仅使用 O(1) 额外空间并 原地 修改输入数组。
+
+样例01:
+输入：nums = [3,2,2,3], val = 3
+输出：2, nums = [2,2]
+
+% 心路历程
+  最难想的是双指针到底在什么条件下移动。
+  经过脑海中的模拟，我列出了4种情况，nums[i] ==/!= val, nums[j] ==/!= val，认为每种情况对应不同操作
+  但事实上情况只有2种，就是slow指针停下来的时候和slow指针不停的时候。
+
+·AC代码
+class Solution:
+    def removeElement(self, nums: List[int], val: int) -> int:
+        fast, slow = 0, 0
+        # 双指针这种算法更偏爱while循环，因为指针并不一直+1，不过本题的while可以换成for，因为fast指针无论如何会一直+1
+        while fast < len(nums):
+            if nums[fast] != val:
+                nums[slow] = nums[fast]
+                slow += 1
+            fast+= 1
+        return slow
