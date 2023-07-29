@@ -73,7 +73,7 @@ class Solution:
                     slow += 1
         return ans
 
-·0神的代码。差距很大，0神写得优雅得多，实际思考的难度也比我的代码要小得多
+·0神的代码。这个while太精髓了，优雅简短
 # 灵茶山艾府
 class Solution:
     def minSubArrayLen(self, target: int, nums: List[int]) -> int:
