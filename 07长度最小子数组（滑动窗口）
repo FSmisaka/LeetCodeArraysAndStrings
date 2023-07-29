@@ -11,6 +11,75 @@
   时间复杂度O(n^2)。太慢力。直接TLE力
 % 对BF的修正：枚举起始坐标、二分查找终点坐标
   由于数组为正整数，即前缀和递增，因此可以使用二分查找找到第1个满足条件的终点坐标
+  此处采用的是闭区间二分！
   时间复杂度O(nlogn)。也有点慢。
 ·AC代码
-% 
+class Solution:
+    def minSubArrayLen(self, target: int, nums: List[int]) -> int:
+        pre = [0]
+        l = len(nums)
+        # 构造前缀和数组
+        for i in nums:
+            pre.append(pre[-1]+i)
+        ans = l + 5
+        if pre[-1] < target: return 0
+        # 遍历第一个指针
+        for i in range(l):
+            left, right = i, l-1
+            if pre[-1] - pre[i] < target: break
+            # 二分找到第二个指针
+            while left <= right:
+                m = (left + right) // 2
+                temp = pre[m+1] - pre[i]
+                if temp < target:
+                    left = m + 1
+                else:
+                    right = m - 1
+            if left + 1 - i < ans:
+                ans = left + 1 - i
+        return ans
+% 双指针 滑动窗口
+  时间复杂度O(n)。太巧妙了。真的省去了BF中好多不必要的讨论。
+    例如 target = 7, nums = [2,3,1,9,3,4]
+    第一步滑到[2,3,1,9], 统计窗口长度
+    第二步滑到[9], 统计窗口长度
+  如果按照BF的做法，还需要枚举左指针是nums[1]、nums[2]的情况。但从数学上你可以证明，是不需要讨论前面的两种情况的。
+·AC代码
+class Solution:
+    def minSubArrayLen(self, target: int, nums: List[int]) -> int:
+        l = len(nums)
+        ttl = nums[0]
+        if sum(nums) < target: return 0
+        nums.append(0)
+        ans = l + 5
+        fast, slow, flag = 0, 0, 0
+        while fast < l:
+            while flag == 0 and fast < l:
+                if ttl >= target:
+                    ans = min(ans, fast - slow + 1)
+                    flag = 1
+                else:
+                    fast += 1
+                    ttl += nums[fast]
+            while flag == 1:
+                if ttl < target:
+                    ans = min(ans, fast - slow + 2)
+                    flag = 0
+                else:
+                    ttl -= nums[slow]
+                    slow += 1
+        return ans
+·0神的代码。差距很大，0神写得优雅得多，实际思考的难度也比我的代码要小得多
+# 灵茶山艾府
+class Solution:
+    def minSubArrayLen(self, target: int, nums: List[int]) -> int:
+        n = len(nums)
+        ans = n + 1
+        s = left = 0
+        for right, x in enumerate(nums):
+            s += x
+            while s >= target:  # 满足要求
+                ans = min(ans, right - left + 1)
+                s -= nums[left]
+                left += 1
+        return ans if ans <= n else 0
