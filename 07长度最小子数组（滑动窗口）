@@ -13,6 +13,7 @@
   由于数组为正整数，即前缀和递增，因此可以使用二分查找找到第1个满足条件的终点坐标
   此处采用的是闭区间二分！
   时间复杂度O(nlogn)。也有点慢。
+
 ·AC代码
 class Solution:
     def minSubArrayLen(self, target: int, nums: List[int]) -> int:
@@ -38,12 +39,14 @@ class Solution:
             if left + 1 - i < ans:
                 ans = left + 1 - i
         return ans
+
 % 双指针 滑动窗口
   时间复杂度O(n)。太巧妙了。真的省去了BF中好多不必要的讨论。
     例如 target = 7, nums = [2,3,1,9,3,4]
     第一步滑到[2,3,1,9], 统计窗口长度
     第二步滑到[9], 统计窗口长度
   如果按照BF的做法，还需要枚举左指针是nums[1]、nums[2]的情况。但从数学上你可以证明，是不需要讨论前面的两种情况的。
+
 ·AC代码
 class Solution:
     def minSubArrayLen(self, target: int, nums: List[int]) -> int:
@@ -69,6 +72,7 @@ class Solution:
                     ttl -= nums[slow]
                     slow += 1
         return ans
+
 ·0神的代码。差距很大，0神写得优雅得多，实际思考的难度也比我的代码要小得多
 # 灵茶山艾府
 class Solution:
